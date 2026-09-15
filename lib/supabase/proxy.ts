@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { getServerEnv } from '@/lib/env/server';
+import type { Database } from '@/types/database.generated';
 
 export async function refreshSession(request: NextRequest): Promise<{
   response: NextResponse;
@@ -9,7 +10,7 @@ export async function refreshSession(request: NextRequest): Promise<{
 }> {
   const env = getServerEnv();
   let response = NextResponse.next({ request });
-  const supabase = createServerClient(
+  const supabase = createServerClient<Database>(
     env.supabaseUrl,
     env.supabasePublishableKey,
     {

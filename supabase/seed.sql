@@ -1,0 +1,1 @@
+-- Foundation intentionally has no product or order seed data.
