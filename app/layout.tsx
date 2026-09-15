@@ -1,18 +1,17 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist_Mono, Manrope } from 'next/font/google';
-
-import { Providers } from '@/app/providers';
-
+import { Manrope, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
+import { Providers } from '@/app/providers';
 
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
 });
 
-const geistMono = Geist_Mono({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-geist-mono',
+  variable: '--font-jakarta',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -36,15 +35,11 @@ export const viewport: Viewport = {
   themeColor: '#087f74',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${geistMono.variable} font-sans`}
+      className={`${manrope.variable} ${jakarta.variable} font-sans`}
     >
       <body className="min-h-svh bg-background text-foreground antialiased">
         <a
