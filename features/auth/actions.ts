@@ -1,5 +1,6 @@
 'use server';
 
+import type { Route } from 'next';
 import { redirect } from 'next/navigation';
 
 import { signInSchema } from '@/features/auth/schemas';
@@ -67,5 +68,5 @@ export async function signInAction(
       ? next
       : getDefaultRouteForRole(context.role);
 
-  redirect(destination);
+  redirect(destination as Route);
 }

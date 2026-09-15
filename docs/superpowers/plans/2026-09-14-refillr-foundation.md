@@ -97,7 +97,7 @@
 - Consumes: approved package versions and cleanup rules from the spec.
 - Produces: `pnpm typecheck`, `pnpm test`, and `pnpm test:watch`; a clean TypeScript baseline; ignored `.superpowers/`; no push-notification placeholder.
 
-- [ ] **Step 1: Write the dependency contract test before changing packages**
+- [x] **Step 1: Write the dependency contract test before changing packages**
 
 ```ts
 // tests/foundation/dependencies.test.ts
@@ -136,13 +136,13 @@ describe('foundation dependency policy', () => {
 });
 ```
 
-- [ ] **Step 2: Run the contract against the current package file**
+- [x] **Step 2: Run the contract against the current package file**
 
 Run: `pnpm dlx vitest@5.0.0 run tests/foundation/dependencies.test.ts --environment node`
 
 Expected: FAIL because Supabase versions use ranges, `@supabase/server` and deferred packages are present, and the test toolchain is not installed locally.
 
-- [ ] **Step 3: Reconcile dependencies with explicit pnpm operations**
+- [x] **Step 3: Reconcile dependencies with explicit pnpm operations**
 
 Run:
 
@@ -154,7 +154,7 @@ pnpm add -D -E supabase@2.117.0 vitest@5.0.0 @testing-library/react@16.3.3 @test
 
 Keep `@tanstack/react-query`, `react-hook-form`, Zod, and Zustand. Do not update React, TypeScript, ESLint, or `@types/node` during these operations.
 
-- [ ] **Step 4: Add scripts and the Vitest harness**
+- [x] **Step 4: Add scripts and the Vitest harness**
 
 Add these exact scripts to `package.json`:
 
@@ -196,7 +196,7 @@ import { afterEach } from 'vitest';
 afterEach(() => cleanup());
 ```
 
-- [ ] **Step 5: Clean TypeScript and ignored-file configuration**
+- [x] **Step 5: Clean TypeScript and ignored-file configuration**
 
 Remove the stray `lib/service-worker.js` entry from `tsconfig.json`; retain the standard Next.js includes. Add these lines to `.gitignore`:
 
@@ -207,7 +207,7 @@ Remove the stray `lib/service-worker.js` entry from `tsconfig.json`; retain the 
 
 Delete the untracked push-only `app/actions.ts` and `lib/service-worker.js`. These files implement the explicitly deferred notification feature and currently break TypeScript.
 
-- [ ] **Step 6: Verify the baseline**
+- [x] **Step 6: Verify the baseline**
 
 Run:
 
@@ -219,7 +219,7 @@ pnpm lint
 
 Expected: dependency test PASS and TypeScript PASS. ESLint may retain only the two pre-existing unused-import/parameter warnings from the empty `proxy.ts`; Task 5 removes them when it implements the proxy.
 
-- [ ] **Step 7: Commit only this task**
+- [x] **Step 7: Commit only this task**
 
 ```powershell
 git status --short
@@ -242,7 +242,7 @@ git commit --only -m "chore: establish foundation toolchain" -- package.json pnp
 - Consumes: Zod 4.6.4; Supabase project `wzjdnlswlfigwuotmykf`.
 - Produces: `PublicEnv`, `getPublicEnv(): PublicEnv`, and `getServerEnv(): PublicEnv`.
 
-- [ ] **Step 1: Write failing environment tests**
+- [x] **Step 1: Write failing environment tests**
 
 ```ts
 // lib/env/client.test.ts
@@ -277,13 +277,13 @@ describe('getPublicEnv', () => {
 });
 ```
 
-- [ ] **Step 2: Run the focused test**
+- [x] **Step 2: Run the focused test**
 
 Run: `pnpm test -- lib/env/client.test.ts`
 
 Expected: FAIL because `@/lib/env/client` does not exist.
 
-- [ ] **Step 3: Implement the client and server environment readers**
+- [x] **Step 3: Implement the client and server environment readers**
 
 ```ts
 // lib/env/client.ts
@@ -340,11 +340,11 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
 
-- [ ] **Step 4: Populate ignored local configuration through Supabase MCP**
+- [x] **Step 4: Populate ignored local configuration through Supabase MCP**
 
 Call `supabase_get_project_url` for project `wzjdnlswlfigwuotmykf`. Call `supabase_get_publishable_keys` for the same project and choose the enabled modern key beginning with `sb_publishable_`. Write those two values to `.env.local` using the exact variable names above. Do not stage `.env.local` and do not print the key in commentary or the final handoff.
 
-- [ ] **Step 5: Verify and commit**
+- [x] **Step 5: Verify and commit**
 
 Run: `pnpm test -- lib/env/client.test.ts`
 
@@ -373,11 +373,11 @@ git commit --only -m "feat: validate Supabase environment" -- .env.example lib/e
 - Consumes: `getPublicEnv()` and `getServerEnv()`.
 - Produces: browser `createClient()`, async server `createClient()`, and `refreshSession(request): Promise<{ response: NextResponse; userId: string | null }>`; Task 4 adds generated database typing to all three factories.
 
-- [ ] **Step 1: Query current Supabase SSR docs through MCP**
+- [x] **Step 1: Query current Supabase SSR docs through MCP**
 
 Call `supabase_search_docs` with a GraphQL `searchDocs` query for `Next.js createServerClient getAll setAll getClaims proxy @supabase/ssr`. Confirm the documented cookie API still matches package 0.12.7 before implementing.
 
-- [ ] **Step 2: Write a failing browser-factory test**
+- [x] **Step 2: Write a failing browser-factory test**
 
 ```ts
 // lib/supabase/client.test.ts
@@ -408,13 +408,13 @@ describe('browser Supabase client', () => {
 });
 ```
 
-- [ ] **Step 3: Run the focused test**
+- [x] **Step 3: Run the focused test**
 
 Run: `pnpm test -- lib/supabase/client.test.ts`
 
 Expected: FAIL because the approved factory path does not exist.
 
-- [ ] **Step 4: Implement the three factories**
+- [x] **Step 4: Implement the three factories**
 
 ```ts
 // lib/supabase/client.ts
@@ -494,7 +494,7 @@ export async function refreshSession(request: NextRequest): Promise<{
 
 Do not call `getSession()` for authorization.
 
-- [ ] **Step 5: Remove the overlapping utility directory and verify**
+- [x] **Step 5: Remove the overlapping utility directory and verify**
 
 Delete the three untracked files under `utils/supabase/`. Run:
 
@@ -505,7 +505,7 @@ pnpm typecheck
 
 Expected: PASS. Do not create a handwritten database type; Task 4 generates the authoritative type and then wires it into these factories.
 
-- [ ] **Step 6: Commit only the approved factories**
+- [x] **Step 6: Commit only the approved factories**
 
 ```powershell
 git status --short
@@ -531,7 +531,7 @@ git commit --only -m "feat: add Supabase SSR clients" -- lib/supabase/client.ts 
 - Consumes: Supabase CLI 2.117.0 and hosted project `wzjdnlswlfigwuotmykf`.
 - Produces: `public.app_role`, `public.profiles`, Auth profile triggers, RLS policies, hardened function grants, and generated `Database` types.
 
-- [ ] **Step 1: Discover CLI syntax and initialize local artifacts**
+- [x] **Step 1: Discover CLI syntax and initialize local artifacts**
 
 Run:
 
@@ -547,7 +547,7 @@ Use the filename created by the CLI; never invent its timestamp. Set `auth.enabl
 -- Foundation intentionally has no product or order seed data.
 ```
 
-- [ ] **Step 2: Write the pgTAP contract before the migration**
+- [x] **Step 2: Write the pgTAP contract before the migration**
 
 ```sql
 -- supabase/tests/database/001_foundation_auth.test.sql
@@ -618,13 +618,13 @@ select * from finish();
 rollback;
 ```
 
-- [ ] **Step 3: Run the database contract red**
+- [x] **Step 3: Run the database contract red**
 
 Run `pnpm supabase start`, then `pnpm supabase test db`.
 
 Expected: FAIL because `app_role` and `profiles` do not exist. If Docker is unavailable, retain this red test and use the pre-migration MCP table/advisor results as the failing hosted baseline; do not weaken the assertions.
 
-- [ ] **Step 4: Write the migration**
+- [x] **Step 4: Write the migration**
 
 Put this SQL in the CLI-generated migration file:
 
@@ -639,7 +639,7 @@ create table public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   role public.app_role not null default 'customer',
   display_name text check (display_name is null or char_length(display_name) between 1 and 120),
-  mobile_number text check (mobile_number is null or mobile_number ~ '^\\+?[0-9]{10,15}$'),
+  mobile_number text check (mobile_number is null or mobile_number ~ '^\+?[0-9]{10,15}$'),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -713,7 +713,7 @@ end;
 $$;
 ```
 
-- [ ] **Step 5: Run the local database contract green**
+- [x] **Step 5: Run the local database contract green**
 
 Run:
 
@@ -724,7 +724,7 @@ pnpm supabase test db
 
 Expected: all 14 pgTAP assertions PASS.
 
-- [ ] **Step 6: Apply the identical migration through Supabase MCP**
+- [x] **Step 6: Apply the identical migration through Supabase MCP**
 
 Call `supabase_apply_migration` with:
 
@@ -734,7 +734,7 @@ Call `supabase_apply_migration` with:
 
 Then call `supabase_list_tables` for `public` with `verbose: true` and `supabase_list_migrations`. Confirm `profiles`, `app_role`, and `foundation_auth` are present.
 
-- [ ] **Step 7: Assert hosted security and generate types**
+- [x] **Step 7: Assert hosted security and generate types**
 
 Call `supabase_execute_sql` with:
 
@@ -766,7 +766,7 @@ Expected: `profiles_rls=true`; both execute values `false`; select and the two e
 
 Call `supabase_generate_typescript_types` and save its returned TypeScript verbatim to `types/database.generated.ts`. Add `import type { Database } from "@/types/database.generated"` to each Supabase factory, then supply `<Database>` to `createBrowserClient` and both `createServerClient` calls. Run both `supabase_get_advisors` calls (`security` and `performance`) and resolve every foundation-related finding before continuing.
 
-- [ ] **Step 8: Verify and commit**
+- [x] **Step 8: Verify and commit**
 
 Run:
 
@@ -795,7 +795,7 @@ git commit --only -m "feat: establish Supabase auth foundation" -- supabase/conf
 - Consumes: `refreshSession(request)` from Task 3.
 - Produces: `AppRole`, `getRequiredRole(pathname)`, `isSafeReturnPath(value)`, `getDefaultRouteForRole(role)`, and Next.js `proxy(request)`.
 
-- [ ] **Step 1: Write failing pure route tests**
+- [x] **Step 1: Write failing pure route tests**
 
 ```ts
 // lib/auth/routes.test.ts
@@ -834,13 +834,13 @@ describe('route authorization', () => {
 });
 ```
 
-- [ ] **Step 2: Run the route tests red**
+- [x] **Step 2: Run the route tests red**
 
 Run: `pnpm test -- lib/auth/routes.test.ts`
 
 Expected: FAIL because `routes.ts` does not exist.
 
-- [ ] **Step 3: Implement pure route helpers**
+- [x] **Step 3: Implement pure route helpers**
 
 ```ts
 // lib/auth/routes.ts
@@ -872,11 +872,11 @@ export function canRoleAccessPath(role: AppRole, pathname: string): boolean {
 }
 ```
 
-- [ ] **Step 4: Write failing proxy tests**
+- [x] **Step 4: Write failing proxy tests**
 
 ```ts
 // proxy.test.ts
-import { unstable_doesProxyMatch } from 'next/experimental/testing/server';
+import { unstable_doesMiddlewareMatch } from 'next/experimental/testing/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -929,14 +929,14 @@ describe('proxy', () => {
     ['/_next/static/app.js', false],
     ['/admin', true],
   ])('matches %s: %s', (url, expected) => {
-    expect(unstable_doesProxyMatch({ config, nextConfig: {}, url })).toBe(
+    expect(unstable_doesMiddlewareMatch({ config, nextConfig: {}, url })).toBe(
       expected,
     );
   });
 });
 ```
 
-- [ ] **Step 5: Implement the top-level proxy**
+- [x] **Step 5: Implement the top-level proxy**
 
 ```ts
 // proxy.ts
@@ -973,7 +973,7 @@ export const config = {
 };
 ```
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Run:
 
@@ -1001,23 +1001,153 @@ git commit --only -m "feat: protect operational routes" -- lib/auth/routes.ts li
 - Consumes: async server `createClient()`, generated `Database`, and `AppRole`.
 - Produces: `AuthContext`, `getAuthContext()`, `requireRole(requiredRole)`, and `ensureAnonymousCustomer()`.
 
-- [ ] **Step 1: Write failing guard tests**
+- [x] **Step 1: Write failing guard tests**
 
-Mock the server client and `next/navigation`. Cover these exact cases:
+```ts
+// lib/auth/guards.test.ts
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-- missing claims returns `null` from `getAuthContext()`;
-- customer claim plus own profile returns `{ userId, role: "customer" }`;
-- `requireRole("admin")` redirects a staff profile to `/access-denied`;
-- no current identity causes `ensureAnonymousCustomer()` to call `signInAnonymously()` and return the created user ID;
-- an existing staff/admin identity causes `ensureAnonymousCustomer()` to throw `Customer identity required`.
+const { redirect } = vi.hoisted(() => ({
+  redirect: vi.fn((url: string) => {
+    throw new Error(`REDIRECT:${url}`);
+  }),
+}));
 
-- [ ] **Step 2: Run the focused test red**
+vi.mock('next/navigation', () => ({ redirect }));
+
+const { createClient } = vi.hoisted(() => ({
+  createClient: vi.fn(),
+}));
+
+vi.mock('@/lib/supabase/server', () => ({ createClient }));
+
+import {
+  ensureAnonymousCustomer,
+  getAuthContext,
+  requireRole,
+} from '@/lib/auth/guards';
+
+describe('auth guards', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('returns null when no authenticated claim exists', async () => {
+    createClient.mockResolvedValue({
+      auth: {
+        getClaims: vi.fn().mockResolvedValue({ data: null }),
+      },
+    });
+
+    const context = await getAuthContext();
+    expect(context).toBeNull();
+  });
+
+  it('returns userId and role for a matching profile', async () => {
+    createClient.mockResolvedValue({
+      auth: {
+        getClaims: vi.fn().mockResolvedValue({
+          data: { claims: { sub: 'user-123' } },
+        }),
+      },
+      from: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            maybeSingle: vi.fn().mockResolvedValue({
+              data: { role: 'customer' },
+              error: null,
+            }),
+          }),
+        }),
+      }),
+    });
+
+    const context = await getAuthContext();
+    expect(context).toEqual({ userId: 'user-123', role: 'customer' });
+  });
+
+  it('redirects unauthenticated user to sign-in on requireRole', async () => {
+    createClient.mockResolvedValue({
+      auth: {
+        getClaims: vi.fn().mockResolvedValue({ data: null }),
+      },
+    });
+
+    await expect(requireRole('admin')).rejects.toThrow('REDIRECT:/sign-in');
+  });
+
+  it('redirects mismatched role to access-denied', async () => {
+    createClient.mockResolvedValue({
+      auth: {
+        getClaims: vi.fn().mockResolvedValue({
+          data: { claims: { sub: 'user-staff' } },
+        }),
+      },
+      from: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            maybeSingle: vi.fn().mockResolvedValue({
+              data: { role: 'staff' },
+              error: null,
+            }),
+          }),
+        }),
+      }),
+    });
+
+    await expect(requireRole('admin')).rejects.toThrow('REDIRECT:/access-denied');
+  });
+
+  it('creates anonymous customer when no session exists', async () => {
+    const signInAnonymously = vi.fn().mockResolvedValue({
+      data: { user: { id: 'anon-456' } },
+      error: null,
+    });
+    createClient.mockResolvedValue({
+      auth: {
+        getClaims: vi.fn().mockResolvedValue({ data: null }),
+        signInAnonymously,
+      },
+    });
+
+    const userId = await ensureAnonymousCustomer();
+    expect(userId).toBe('anon-456');
+    expect(signInAnonymously).toHaveBeenCalled();
+  });
+
+  it('rejects non-customer identities calling ensureAnonymousCustomer', async () => {
+    createClient.mockResolvedValue({
+      auth: {
+        getClaims: vi.fn().mockResolvedValue({
+          data: { claims: { sub: 'admin-789' } },
+        }),
+      },
+      from: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            maybeSingle: vi.fn().mockResolvedValue({
+              data: { role: 'admin' },
+              error: null,
+            }),
+          }),
+        }),
+      }),
+    });
+
+    await expect(ensureAnonymousCustomer()).rejects.toThrow(
+      'Customer identity required',
+    );
+  });
+});
+```
+
+- [x] **Step 2: Run the focused test red**
 
 Run: `pnpm test -- lib/auth/guards.test.ts`
 
 Expected: FAIL because the guard module does not exist.
 
-- [ ] **Step 3: Implement guard behavior**
+- [x] **Step 3: Implement guard behavior**
 
 ```ts
 // lib/auth/guards.ts
@@ -1070,7 +1200,7 @@ export async function ensureAnonymousCustomer(): Promise<string> {
 }
 ```
 
-- [ ] **Step 4: Verify and commit**
+- [x] **Step 4: Verify and commit**
 
 Run:
 
@@ -1102,7 +1232,7 @@ git commit --only -m "feat: add role-aware auth guards" -- lib/auth/guards.ts li
 - Consumes: server Supabase client, `getAuthContext()`, `canRoleAccessPath()`, and `getDefaultRouteForRole()`.
 - Produces: `SignInInput`, `SignInState`, `signInAction(previousState, formData)`, and `<SignInForm nextPath />`.
 
-- [ ] **Step 1: Inspect and add the explicit shadcn Field component**
+- [x] **Step 1: Inspect and add the explicit shadcn Field component**
 
 Run:
 
@@ -1113,7 +1243,7 @@ pnpm dlx shadcn@latest add @shadcn/field
 
 Read the generated file and preserve the configured Base UI/Mira/Lucide conventions. Do not overwrite any existing UI component.
 
-- [ ] **Step 2: Write failing schema and form tests**
+- [x] **Step 2: Write failing schema and form tests**
 
 ```ts
 // features/auth/schemas.test.ts
@@ -1137,17 +1267,45 @@ describe('signInSchema', () => {
     ).toBe(false);
   });
 });
+```ts
+// features/auth/components/sign-in-form.test.tsx
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+
+import { SignInForm } from '@/features/auth/components/sign-in-form';
+
+vi.mock('@/features/auth/actions', () => ({
+  signInAction: vi.fn().mockResolvedValue({ status: 'idle', message: '' }),
+}));
+
+describe('SignInForm', () => {
+  it('shows accessible validation errors without submitting when inputs are invalid', async () => {
+    const user = userEvent.setup();
+    render(<SignInForm nextPath="/admin/orders" />);
+
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    await user.click(submitButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/enter a valid email address/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/password must contain at least 8 characters/i),
+      ).toBeInTheDocument();
+    });
+  });
+});
 ```
 
-The component test renders `<SignInForm nextPath="/admin/orders" />`, submits malformed input, and expects accessible email/password error text without invoking the server action.
-
-- [ ] **Step 3: Run the focused tests red**
+- [x] **Step 3: Run the focused tests red**
 
 Run: `pnpm test -- features/auth/schemas.test.ts features/auth/components/sign-in-form.test.tsx`
 
 Expected: FAIL because the feature files do not exist.
 
-- [ ] **Step 4: Implement schema and action**
+- [x] **Step 4: Implement schema and action**
 
 ```ts
 // features/auth/schemas.ts
@@ -1161,32 +1319,226 @@ export const signInSchema = z.object({
 export type SignInInput = z.infer<typeof signInSchema>;
 ```
 
-`features/auth/actions.ts` must:
-
-1. declare `"use server"`;
-2. parse only `email`, `password`, and `next` using `signInSchema` plus `isSafeReturnPath`;
-3. return `{ status: "error", message: "Check your email and password and try again." }` for Supabase auth errors;
-4. load `getAuthContext()` after successful sign-in;
-5. reject customer-role accounts with the generic operational-access message;
-6. redirect to the safe requested path only when `canRoleAccessPath(context.role, next)` is true; otherwise use `getDefaultRouteForRole(context.role)`.
-
-Define `SignInState` as:
-
 ```ts
+// features/auth/actions.ts
+'use server';
+
+import { redirect } from 'next/navigation';
+
+import { signInSchema } from '@/features/auth/schemas';
+import { getAuthContext } from '@/lib/auth/guards';
+import {
+  canRoleAccessPath,
+  getDefaultRouteForRole,
+  isSafeReturnPath,
+} from '@/lib/auth/routes';
+import { createClient } from '@/lib/supabase/server';
+
 export type SignInState = {
   status: 'idle' | 'error';
   message: string;
   fieldErrors?: Partial<Record<'email' | 'password', string[]>>;
 };
+
+export async function signInAction(
+  _prevState: SignInState,
+  formData: FormData,
+): Promise<SignInState> {
+  const rawEmail = formData.get('email');
+  const rawPassword = formData.get('password');
+  const rawNext = formData.get('next');
+
+  const parsed = signInSchema.safeParse({
+    email: rawEmail,
+    password: rawPassword,
+  });
+
+  if (!parsed.success) {
+    return {
+      status: 'error',
+      message: 'Please correct the errors in the form.',
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+
+  if (error) {
+    return {
+      status: 'error',
+      message: 'Check your email and password and try again.',
+    };
+  }
+
+  const context = await getAuthContext();
+  if (!context || context.role === 'customer') {
+    await supabase.auth.signOut();
+    return {
+      status: 'error',
+      message: 'Check your email and password and try again.',
+    };
+  }
+
+  const next =
+    typeof rawNext === 'string' && isSafeReturnPath(rawNext) ? rawNext : null;
+  const destination =
+    next && canRoleAccessPath(context.role, next)
+      ? next
+      : getDefaultRouteForRole(context.role);
+
+  redirect(destination);
+}
 ```
 
-- [ ] **Step 5: Implement React Hook Form UI and page**
+- [x] **Step 5: Implement React Hook Form UI and page**
 
-Use `useForm<SignInInput>({ resolver: zodResolver(signInSchema) })`, `useActionState(signInAction, initialState)`, and `startTransition` to submit a `FormData` containing the normalized fields plus `next`. Use shadcn `Card`, `FieldGroup`, `Field`, `FieldLabel`, `FieldError`, `Input`, and `Button`. Apply `aria-invalid` and `data-invalid` exactly where errors exist. The button text is `Sign in`, becomes disabled while pending, and shows no account-existence details.
+```tsx
+// features/auth/components/sign-in-form.tsx
+'use client';
 
-`app/(auth)/sign-in/page.tsx` awaits `searchParams`, passes only a safe `next` string, and renders the form inside a centered `<main>` with the Refillr brand text.
+import { zodResolver } from '@hookform/resolvers/zod';
+import { startTransition, useActionState } from 'react';
+import { useForm } from 'react-hook-form';
 
-- [ ] **Step 6: Verify and commit**
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { signInAction, type SignInState } from '@/features/auth/actions';
+import { signInSchema, type SignInInput } from '@/features/auth/schemas';
+
+const initialState: SignInState = {
+  status: 'idle',
+  message: '',
+};
+
+export function SignInForm({ nextPath }: { nextPath: string | null }) {
+  const [state, formAction, isPending] = useActionState(
+    signInAction,
+    initialState,
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInInput>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: { email: '', password: '' },
+  });
+
+  const onSubmit = (data: SignInInput) => {
+    const formData = new FormData();
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    if (nextPath) formData.append('next', nextPath);
+
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
+
+  return (
+    <Card className="w-full max-w-md shadow-sm border-border bg-card">
+      <CardHeader className="space-y-1 text-center">
+        <CardTitle className="text-xl font-semibold tracking-tight text-foreground">
+          Staff & Operations Sign In
+        </CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          Enter your station credentials to access management tools
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          {state.status === 'error' && state.message && (
+            <div
+              role="alert"
+              className="rounded-md bg-destructive/15 p-3 text-sm text-destructive"
+            >
+              {state.message}
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              aria-invalid={Boolean(errors.email)}
+              {...register('email')}
+            />
+            {errors.email && (
+              <p className="text-xs text-destructive">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              aria-invalid={Boolean(errors.password)}
+              {...register('password')}
+            />
+            {errors.password && (
+              <p className="text-xs text-destructive">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <Button type="submit" disabled={isPending} className="w-full h-11">
+            {isPending ? 'Signing in...' : 'Sign in'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+```tsx
+// app/(auth)/sign-in/page.tsx
+import { SignInForm } from '@/features/auth/components/sign-in-form';
+import { isSafeReturnPath } from '@/lib/auth/routes';
+
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const { next } = await searchParams;
+  const safeNext = next && isSafeReturnPath(next) ? next : null;
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+      <div className="mb-6 text-center">
+        <h1 className="text-2xl font-bold tracking-tight text-primary">
+          Refillr
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Water Refilling Operations
+        </p>
+      </div>
+      <SignInForm nextPath={safeNext} />
+    </main>
+  );
+}
+```
+
+- [x] **Step 6: Verify and commit**
 
 Run:
 
@@ -1217,17 +1569,71 @@ git commit --only -m "feat: add operational sign in" -- components/ui/field.tsx 
 - Consumes: Manrope/Geist Mono and TanStack Query.
 - Produces: root metadata, semantic tokens, global skip link, `<Providers>`, and `<RefillrMark>`.
 
-- [ ] **Step 1: Write the brand accessibility test**
+- [x] **Step 1: Write the brand accessibility test**
 
-Render `<RefillrMark />` and assert that the visible `Refillr` wordmark is present. Render `<RefillrMark compact />` and assert that the decorative droplet is hidden from assistive technology while the accessible brand name remains available.
+```tsx
+// components/brand/refillr-mark.test.tsx
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
-- [ ] **Step 2: Run the test red**
+import { RefillrMark } from '@/components/brand/refillr-mark';
+
+describe('RefillrMark', () => {
+  it('renders visible wordmark and link to home', () => {
+    render(<RefillrMark />);
+    const link = screen.getByRole('link', { name: /refillr home/i });
+    expect(link).toHaveAttribute('href', '/');
+    expect(screen.getByText('Refillr')).toBeInTheDocument();
+  });
+
+  it('hides decorative icon on compact mode while retaining accessible name', () => {
+    render(<RefillrMark compact />);
+    const link = screen.getByRole('link', { name: /refillr home/i });
+    expect(link).toBeInTheDocument();
+    const icon = link.querySelector('svg');
+    expect(icon).toHaveAttribute('aria-hidden', 'true');
+  });
+});
+```
+
+```tsx
+// components/brand/refillr-mark.tsx
+import { Droplet } from 'lucide-react';
+import Link from 'next/link';
+
+export function RefillrMark({
+  compact = false,
+  className = '',
+}: {
+  compact?: boolean;
+  className?: string;
+}) {
+  return (
+    <Link
+      href="/"
+      aria-label="Refillr Home"
+      className={`inline-flex items-center gap-2 font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md p-1 ${className}`}
+    >
+      <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <Droplet className="size-4.5 fill-current" aria-hidden="true" />
+      </span>
+      {!compact && (
+        <span className="text-lg tracking-tight font-bold text-foreground">
+          Refillr
+        </span>
+      )}
+    </Link>
+  );
+}
+```
+
+- [x] **Step 2: Run the test red**
 
 Run: `pnpm test -- components/brand/refillr-mark.test.tsx`
 
 Expected: FAIL because the brand component does not exist.
 
-- [ ] **Step 3: Implement root providers**
+- [x] **Step 3: Implement root providers**
 
 ```tsx
 // app/providers.tsx
@@ -1252,15 +1658,83 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-- [ ] **Step 4: Implement the approved root layout**
+- [x] **Step 4: Implement the approved root layout**
 
-Load Manrope with the Next font variable `--font-manrope` and Geist Mono with `--font-geist-mono`. Map them in `@theme inline` as `--font-sans: var(--font-manrope)` and `--font-mono: var(--font-geist-mono)`; do not define a self-referencing `--font-sans`. Export metadata with title template `%s · Refillr`, default `Refillr`, the description `Fast local water refills and delivery tracking.`, application name `Refillr`, manifest `/manifest.webmanifest`, and Apple web-app capability. Render a skip link to `#main-content`, then `<Providers>{children}</Providers>`. The body must use `min-h-svh bg-background text-foreground`.
+```tsx
+// app/layout.tsx
+import type { Metadata, Viewport } from 'next';
+import { Geist_Mono, Manrope } from 'next/font/google';
 
-- [ ] **Step 5: Apply exact semantic theme values**
+import { Providers } from '@/app/providers';
 
-Retain shadcn/Tailwind imports and map the approved palette through CSS variables. Use:
+import './globals.css';
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  variable: '--font-manrope',
+});
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Refillr',
+    template: '%s · Refillr',
+  },
+  description: 'Fast local water refills and delivery tracking.',
+  applicationName: 'Refillr',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Refillr',
+  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#087f74',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html
+      lang="en"
+      className={`${manrope.variable} ${geistMono.variable} font-sans`}
+    >
+      <body className="min-h-svh bg-background text-foreground antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-md"
+        >
+          Skip to main content
+        </a>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+- [x] **Step 5: Apply exact semantic theme values**
 
 ```css
+/* app/globals.css */
+@import 'tailwindcss';
+
+@theme inline {
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-geist-mono);
+}
+
 :root {
   --background: oklch(0.985 0.006 168);
   --foreground: oklch(0.25 0.035 183);
@@ -1281,12 +1755,25 @@ Retain shadcn/Tailwind imports and map the approved palette through CSS variable
   --input: var(--border);
   --ring: oklch(0.52 0.105 176);
   --radius: 0.65rem;
+
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 ```
 
-Map sidebar tokens from the same palette. Remove the unused dark token block from this increment. Add `scroll-behavior: smooth` only inside `@media (prefers-reduced-motion: no-preference)`, and give the skip link a visible focused position.
-
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 Run:
 
@@ -1324,7 +1811,7 @@ git commit --only -m "feat: add Refillr visual foundation" -- app/globals.css ap
 - Consumes: the approved visual palette and the root `<Providers>` from Task 8.
 - Produces: valid install manifest, install icons, service-worker registration, navigation-only offline fallback, and security/cache headers.
 
-- [ ] **Step 1: Write manifest and registration tests**
+- [x] **Step 1: Write manifest and registration tests**
 
 The manifest test calls `manifest()` and asserts:
 
@@ -1351,13 +1838,13 @@ expect(manifest().icons).toEqual(
 
 The registrar test stubs `navigator.serviceWorker.register`, renders `<RegisterServiceWorker />`, and expects one call with `/sw.js` and `{ scope: "/", updateViaCache: "none" }`. The offline-page test renders the page and asserts heading `You’re offline` plus text `No order has been submitted or changed.`.
 
-- [ ] **Step 2: Run both tests red**
+- [x] **Step 2: Run both tests red**
 
 Run: `pnpm test -- app/manifest.test.ts components/pwa/register-service-worker.test.tsx app/offline/page.test.tsx`
 
 Expected: FAIL because the manifest values and registrar do not meet the contract.
 
-- [ ] **Step 3: Implement the manifest and registrar**
+- [x] **Step 3: Implement the manifest and registrar**
 
 Return the exact values from Step 1, add description `Order water refills and track local deliveries.`, set `scope: "/"`, and declare all icons as `image/png`; set the first two icon purposes to `any` and the third to `maskable`. Implement `app/offline/page.tsx` as a static warm-white recovery card with exactly the tested heading and safety statement; it must never imply queued work exists.
 
@@ -1382,7 +1869,7 @@ export function RegisterServiceWorker() {
 
 Modify `app/providers.tsx` to import `<RegisterServiceWorker>` and render it after `{children}` inside `QueryClientProvider`. This is the first task in which that import may appear.
 
-- [ ] **Step 4: Implement navigation-only offline behavior**
+- [x] **Step 4: Implement navigation-only offline behavior**
 
 ```js
 // public/sw.js
@@ -1430,15 +1917,15 @@ self.addEventListener('fetch', (event) => {
 });
 ```
 
-- [ ] **Step 5: Create exact-size icon assets**
+- [x] **Step 5: Create exact-size icon assets**
 
 Create a square source mark with a deep-aqua field (`#087f74`) and a centered warm-white water droplet whose negative space suggests a lowercase `r`; no text, gradients, shadows, or edge-touching details. Produce PNGs at exactly 192×192 and 512×512. For the maskable file, keep all essential artwork inside the central 80% safe zone. Verify dimensions before adding them to Git.
 
-- [ ] **Step 6: Harden Next.js headers**
+- [x] **Step 6: Harden Next.js headers**
 
 Retain `typedRoutes: true` and `reactCompiler: true`. Remove unused remote image patterns and the unrelated COOP-only header. Configure global `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and `Referrer-Policy: strict-origin-when-cross-origin`. Add `/sw.js` headers for JavaScript content type, `Cache-Control: no-cache, no-store, must-revalidate`, `Service-Worker-Allowed: /`, and `Content-Security-Policy: default-src 'self'; script-src 'self'`.
 
-- [ ] **Step 7: Verify and commit**
+- [x] **Step 7: Verify and commit**
 
 Run:
 
@@ -1475,23 +1962,23 @@ git commit --only -m "feat: add online-first PWA foundation" -- app/manifest.ts 
 - Consumes: `<RefillrMark>`, shadcn Button/Card, and typed Next.js routes.
 - Produces: `<CustomerShell>`, `<PageIntro>`, and public pages `/`, `/order`, `/orders`, `/track/[id]`.
 
-- [ ] **Step 1: Write the customer-shell test**
+- [x] **Step 1: Write the customer-shell test**
 
 Render `<CustomerShell><div>Content</div></CustomerShell>`. Assert a banner landmark, a main landmark with id `main-content`, links named `Home`, `Orders`, and `Track`, one prominent `Order water` link to `/order`, and visible child content.
 
-- [ ] **Step 2: Run the focused test red**
+- [x] **Step 2: Run the focused test red**
 
 Run: `pnpm test -- components/layouts/customer-shell.test.tsx`
 
 Expected: FAIL because the shell does not exist.
 
-- [ ] **Step 3: Implement the role-specific customer shell**
+- [x] **Step 3: Implement the role-specific customer shell**
 
 Use a sticky warm-white header, centered `max-w-5xl` content, and a mobile fixed bottom nav hidden at `md`. Give all links a minimum height of 44px and semantic active/focus states. The desktop header shows the brand, `Track order`, `My orders`, and the primary `Order water` action. The mobile nav shows `Home`, `Orders`, and `Track`; do not add an account page that does not exist.
 
 `app/(customer)/layout.tsx` simply wraps children in `<CustomerShell>`.
 
-- [ ] **Step 4: Implement exact foundation page copy**
+- [x] **Step 4: Implement exact foundation page copy**
 
 - `/`: eyebrow `Fresh water, on schedule`; heading `Refill today. Relax tomorrow.`; body `Place a local refill or delivery request in under a minute.`; primary link `Order water`; secondary link `Track an order`.
 - `/order`: title `Order water`; description `The guided order flow is the next Refillr feature slice.`; action back to `/`.
@@ -1500,7 +1987,7 @@ Use a sticky warm-white header, centered `max-w-5xl` content, and a mobile fixed
 
 Use `<PageIntro>` and shadcn components; do not show fake orders, prices, statuses, or reports.
 
-- [ ] **Step 5: Verify and commit**
+- [x] **Step 5: Verify and commit**
 
 Run:
 
@@ -1533,24 +2020,24 @@ Delete the original `app/page.tsx` as part of the same commit so only the route-
 - Consumes: `requireRole("staff")`, `<RefillrMark>`, and `<PageIntro>`.
 - Produces: protected `/staff` and `/staff/deliveries` route shells.
 
-- [ ] **Step 1: Write the staff-shell test**
+- [x] **Step 1: Write the staff-shell test**
 
 Render the shell and assert links named `Assigned`, `Deliveries`, and `Completed`, a main landmark with `id="main-content"`, and minimum touch-target classes. `Completed` links to `/staff/deliveries?view=completed`; the shell does not query delivery data.
 
-- [ ] **Step 2: Run the test red**
+- [x] **Step 2: Run the test red**
 
 Run: `pnpm test -- components/layouts/staff-shell.test.tsx`
 
 Expected: FAIL because the shell does not exist.
 
-- [ ] **Step 3: Implement staff layout and pages**
+- [x] **Step 3: Implement staff layout and pages**
 
 The async route-group layout calls `await requireRole("staff")` before rendering `<StaffShell>`. Use a compact mobile-first task header and fixed bottom navigation; at desktop widths, use a simple horizontal task nav rather than the admin sidebar.
 
 - `/staff`: title `Assigned work`; description `New delivery assignments will appear here when order management is connected.`.
 - `/staff/deliveries`: await `searchParams`; when `view === "completed"`, title `Completed deliveries`, otherwise `Delivery queue`; use truthful empty-state copy in both cases.
 
-- [ ] **Step 4: Verify and commit**
+- [x] **Step 4: Verify and commit**
 
 Run:
 
