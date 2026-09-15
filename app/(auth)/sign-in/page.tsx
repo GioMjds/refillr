@@ -3,8 +3,10 @@ import { isSafeReturnPath } from '@/lib/auth/routes';
 
 export default async function SignInPage({
   searchParams,
-}: PageProps<'/sign-in'>) {
-  const { next } = await searchParams;
+}: {
+  searchParams: Promise<{ next?: string; error?: string }>;
+}) {
+  const { next, error } = await searchParams;
   const safeNext =
     typeof next === 'string' && isSafeReturnPath(next) ? next : null;
 
@@ -18,7 +20,7 @@ export default async function SignInPage({
           Water Refilling Operations
         </p>
       </div>
-      <SignInForm nextPath={safeNext} />
+      <SignInForm nextPath={safeNext} initialError={error} />
     </main>
   );
 }
