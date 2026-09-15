@@ -7,7 +7,7 @@ describe('OfflinePage', () => {
   it('renders offline recovery message without implying queued work', () => {
     render(<OfflinePage />);
     expect(
-      screen.getByRole('heading', { name: /you’re offline/i }),
+      screen.getByRole('heading', { name: /you[’']re offline/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/no order has been submitted or changed\./i),
