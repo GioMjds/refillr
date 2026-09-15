@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
 import type { Route } from 'next';
 import Link from 'next/link';
+import { useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -12,7 +12,6 @@ import {
   FileText,
   Menu,
 } from 'lucide-react';
-
 import { RefillrMark } from '@/components/brand/refillr-mark';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -25,17 +24,19 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from 'cn';
 
-const navItems: Array<{
+type NavItem = {
   href: Route;
   label: string;
   icon: typeof LayoutDashboard;
-}> = [
+};
+
+const navItems = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
   { href: '/admin/orders', label: 'Orders', icon: ClipboardList },
   { href: '/admin/customers', label: 'Customers', icon: Users },
   { href: '/admin/deliveries', label: 'Deliveries', icon: Truck },
   { href: '/admin/reports', label: 'Reports', icon: FileText },
-];
+] satisfies NavItem[];
 
 function NavLinks({
   pathname,
@@ -61,7 +62,7 @@ function NavLinks({
             href={item.href}
             onClick={onClick}
             className={cn(
-              'min-h-[44px] flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
+              'min-h-11 flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
               isActive
                 ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold'
                 : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground',
@@ -81,7 +82,6 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-
     <div className="min-h-svh flex flex-col md:flex-row bg-background text-foreground">
       {/* Mobile Header with Sheet */}
       <header
@@ -102,7 +102,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 variant="ghost"
                 size="icon"
                 aria-label="Open Navigation Menu"
-                className="min-h-[44px] min-w-[44px]"
+                className="min-h-11 min-w-11"
               />
             }
           >
