@@ -1,6 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
-
 import { getServerEnv } from '@/lib/env/server';
 import type { Database } from '@/types/database.generated';
 

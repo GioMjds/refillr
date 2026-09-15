@@ -2,7 +2,6 @@ import 'server-only';
 
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-
 import { getServerEnv } from '@/lib/env/server';
 import type { Database } from '@/types/database.generated';
 

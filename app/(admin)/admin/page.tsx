@@ -11,10 +11,16 @@ export default function AdminOverviewPage() {
       />
       <Card className="border-dashed border-border bg-muted/20">
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-          <LayoutDashboard className="size-10 text-muted-foreground/60 mb-3" aria-hidden="true" />
-          <p className="text-sm font-medium text-foreground">Operational dashboard idle</p>
+          <LayoutDashboard
+            className="size-10 text-muted-foreground/60 mb-3"
+            aria-hidden="true"
+          />
+          <p className="text-sm font-medium text-foreground">
+            Operational dashboard idle
+          </p>
           <p className="text-xs text-muted-foreground mt-1 max-w-sm">
-            Live volume, revenue, and delivery velocity metrics will activate when order lifecycle events are recorded.
+            Live volume, revenue, and delivery velocity metrics will activate
+            when order lifecycle events are recorded.
           </p>
         </CardContent>
       </Card>

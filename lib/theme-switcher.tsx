@@ -6,7 +6,6 @@ import { Sun, Moon } from 'lucide-react';
 import { Kbd } from '@/components/ui/kbd';
 import { Button } from '@/components/ui/button';
 
-
 export default function ThemeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState<boolean>(false);

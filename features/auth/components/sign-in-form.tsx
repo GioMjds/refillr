@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { startTransition, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
-
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -59,7 +58,11 @@ export function SignInForm({ nextPath }: { nextPath: string | null }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+          noValidate
+        >
           {state.status === 'error' && state.message && (
             <div
               role="alert"
