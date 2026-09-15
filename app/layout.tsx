@@ -1,74 +1,57 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono, Manrope } from 'next/font/google';
+import { Geist_Mono, Manrope } from 'next/font/google';
+
+import { Providers } from '@/app/providers';
+
 import './globals.css';
-import { cn } from '@/lib/utils';
-import Providers from './providers';
-import { ThemeProvider } from '@/lib/theme-provider';
 
-const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans' });
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const manrope = Manrope({
   subsets: ['latin'],
+  variable: '--font-manrope',
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
   subsets: ['latin'],
+  variable: '--font-geist-mono',
 });
 
 export const metadata: Metadata = {
-  title: 'refillr',
-  description: 'Water Refilling',
+  title: {
+    default: 'Refillr',
+    template: '%s · Refillr',
+  },
+  description: 'Fast local water refills and delivery tracking.',
+  applicationName: 'Refillr',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Refillr',
+  },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
-  ],
+  themeColor: '#087f74',
 };
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'refillr',
-};
-
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default function RootLayout({
+  children,
+}: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={cn(
-        'h-full',
-        'antialiased',
-        geistSans.variable,
-        geistMono.variable,
-        'font-sans',
-        manrope.variable,
-      )}
-      suppressHydrationWarning
-      data-scroll-behavior="smooth"
+      className={`${manrope.variable} ${geistMono.variable} font-sans`}
     >
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLd),
-          }}
-        />
-      </head>
-      <body className="min-h-full flex flex-col">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+      <body className="min-h-svh bg-background text-foreground antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-md"
         >
-          <Providers>{children}</Providers>
-        </ThemeProvider>
+          Skip to main content
+        </a>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
