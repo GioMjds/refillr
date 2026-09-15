@@ -1,9 +1,14 @@
+import { type ReactNode } from 'react';
+
 import { AdminShell } from '@/components/layouts/admin-shell';
 import { requireRole } from '@/lib/auth/guards';
 
 export default async function AdminLayout({
   children,
-}: LayoutProps<'/admin'>) {
+}: {
+  children: ReactNode;
+}) {
   await requireRole('admin');
   return <AdminShell>{children}</AdminShell>;
 }
+

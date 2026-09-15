@@ -40,3 +40,10 @@
 
 - No customer personal data - names, contacts, account numbers, etc.
 - No credentials - passwords, API keys, tokens, connection strings, etc.
+
+## Design Context
+
+- Product Register: `product` (essential utility, workflows, and task completion).
+- Creative North Star: "The Civic Aqueduct" (clean, calm, dependable public utility).
+- Primary Docs: Reference [PRODUCT.md](file:///D:/giomj/Projects/refillr/PRODUCT.md) for strategy and users; reference [DESIGN.md](file:///D:/giomj/Projects/refillr/DESIGN.md) for visual tokens and components.
+

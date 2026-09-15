@@ -37,15 +37,19 @@ const navItems: Array<{
   { href: '/admin/reports', label: 'Reports', icon: FileText },
 ];
 
-export function AdminShell({ children }: { children: ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+function NavLinks({
+  pathname,
+  onClick,
+}: {
+  pathname: string | null;
+  onClick?: () => void;
+}) {
+  const currentPath = pathname ?? '';
 
-  const NavLinks = ({ onClick }: { onClick?: () => void }) => (
+  return (
     <nav className="flex flex-col gap-1 px-3" aria-label="Admin Navigation">
       {navItems.map((item) => {
         const Icon = item.icon;
-        const currentPath = pathname ?? '';
         const isActive =
           item.href === '/admin'
             ? currentPath === '/admin'
@@ -70,8 +74,14 @@ export function AdminShell({ children }: { children: ReactNode }) {
       })}
     </nav>
   );
+}
+
+export function AdminShell({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
+
     <div className="min-h-svh flex flex-col md:flex-row bg-background text-foreground">
       {/* Mobile Header with Sheet */}
       <header
@@ -109,7 +119,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               </div>
             </SheetHeader>
             <div className="py-4">
-              <NavLinks onClick={() => setOpen(false)} />
+              <NavLinks pathname={pathname} onClick={() => setOpen(false)} />
             </div>
           </SheetContent>
         </Sheet>
@@ -124,7 +134,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </Badge>
         </div>
         <div className="flex-1 overflow-y-auto py-4">
-          <NavLinks />
+          <NavLinks pathname={pathname} />
         </div>
       </aside>
 

@@ -10,7 +10,7 @@ export default function OfflinePage() {
             <WifiOff className="size-6" aria-hidden="true" />
           </div>
           <h1 className="text-xl font-semibold text-foreground tracking-tight">
-            You’re offline
+            You&apos;re offline
           </h1>
         </CardHeader>
         <CardContent className="space-y-4">
